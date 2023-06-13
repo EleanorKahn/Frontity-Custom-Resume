@@ -27,6 +27,7 @@ services:
       MYSQL_ROOT_PASSWORD: process.env.MYSQL_ROOT_PASSWORD
     networks:
       - frontitysite
+
   # Wordpress
   wordpress:
     depends_on:
@@ -40,7 +41,7 @@ services:
     environment:
       # host is db service
       # 3306 is default port for mysql
-      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_HOST: db:3307
       # must match mysql user and password
       WORDPRESS_DB_USER: process.env.WORDPRESS_DB_USER
       WORDPRESS_DB_PASSWORD: process.env.WORDPRESS_DB_PASSWORD
