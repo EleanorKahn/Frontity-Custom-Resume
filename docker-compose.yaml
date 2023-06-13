@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   # Database
@@ -28,6 +28,11 @@ services:
     networks:
       - frontitysite
 
+    # Enable emulation for the phpmyadmin service
+    command: ["qemu", "qemu-system-x86_64", "-cpu", "host", "-vnc", ":0"]
+    # Mount QEMU binaries into the container
+    volumes:
+      - /usr/bin/qemu-x86_64-static:/usr/bin/qemu-x86_64-static
   # Wordpress
   wordpress:
     depends_on:
@@ -36,13 +41,9 @@ services:
     ports:
       - '8001:80'
     restart: always
-    # Web route for Apache, which is used by WP
     volumes: ['./:/var/www/html']
     environment:
-      # host is db service
-      # 3306 is default port for mysql
       WORDPRESS_DB_HOST: db:3307
-      # must match mysql user and password
       WORDPRESS_DB_USER: process.env.WORDPRESS_DB_USER
       WORDPRESS_DB_PASSWORD: process.env.WORDPRESS_DB_PASSWORD
     networks:
