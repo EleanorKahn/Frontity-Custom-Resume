@@ -1,11 +1,11 @@
-version: '3'
+version: '4'
 
 services:
   # Database
-  db:
+  db2:
     image: mysql:latest
-    volumes:
-      - db_data:/var/lib/mysql
+    volumes: 
+      - db2_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: process.env.MYSQL_ROOT_PASSWORD
@@ -13,42 +13,39 @@ services:
       MYSQL_USER: process.env.MYSQL_USER
       MYSQL_PASSWORD: process.env.MYSQL_PASSWORD
     networks:
-      - frontitysite
+      - frontityresumesite
+
   # phpmyadmin
   phpmyadmin:
     depends_on:
-      - db
-    image: phpmyadmin/phpmyadmin
+      - db2
+    image: phpmyadmin:latest
     restart: always
-    ports:
-      - '8081:80'
+    ports: 
+      - '8082:80'
     environment:
-      PMA_HOST: db
+      PMA_HOST: db2
       MYSQL_ROOT_PASSWORD: process.env.MYSQL_ROOT_PASSWORD
     networks:
-      - frontitysite
+      - frontityresumesite
 
-    # Enable emulation for the phpmyadmin service
-    command: ["qemu", "qemu-system-x86_64", "-cpu", "host", "-vnc", ":0"]
-    # Mount QEMU binaries into the container
-    volumes:
-      - /usr/bin/qemu-x86_64-static:/usr/bin/qemu-x86_64-static
   # Wordpress
   wordpress:
     depends_on:
-      - db
+      - db2
     image: wordpress:latest
     ports:
-      - '8001:80'
+      - '8002:80'
     restart: always
     volumes: ['./:/var/www/html']
     environment:
-      WORDPRESS_DB_HOST: db:3307
+      WORDPRESS_DB_HOST: db2:3306
       WORDPRESS_DB_USER: process.env.WORDPRESS_DB_USER
       WORDPRESS_DB_PASSWORD: process.env.WORDPRESS_DB_PASSWORD
     networks:
-      - frontitysite
-networks:
-  frontitysite:
-volumes:
-  db_data:
+      - frontityresumesite
+networks: 
+  frontityresumesite:
+volumes: 
+  db2_data: 
+
